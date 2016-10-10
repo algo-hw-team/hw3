@@ -87,7 +87,6 @@ public class MainApp {
                 numOfCoinTypes,
                 coinTypes,
                 numOfCoins);
-//        int maxPriceCanPay = getPrice(numOfCoinTypes, coinTypes, numOfCoins);
 
         for (int price : payablePrices) {
             // Dynamic Programming start
@@ -146,6 +145,7 @@ public class MainApp {
             maxPriceCanPay += coinTypes.get(i) * numOfCoins.get(i);
         }
 
+        // 최대 금액 - 타겟 금액이 가능한 동전 조합의 경우의수 보다 작을 경우
         if ((maxPriceCanPay - priceToPay) <= availableCoinCombinations) {
             for (int i = priceToPay; i <= maxPriceCanPay; i++) {
                 payablePrices.add(i);
@@ -154,7 +154,7 @@ public class MainApp {
             return payablePrices;
         }
 
-
+        // 그 외에는 가능한 경우의 수 중에서 priceToPay보다 크게 지불하는 경우를 전부 구함
         ArrayList<Integer> current = new ArrayList<>(numOfCoins);
 
         while (current.get(lastIndex) >= 0) {
