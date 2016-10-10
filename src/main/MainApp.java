@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class MainApp {
 
-    private final static String basePath = "/Users/Join/dev/homeworks-0302/algo/hw3/";
+    private final static String basePath = "c:/hw3/";
     private final static String inputPath = basePath + "input.txt";
     private final static String outputPath = basePath + "2013147550.txt";
 
