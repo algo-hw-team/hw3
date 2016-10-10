@@ -6,22 +6,31 @@ import java.util.HashMap;
 public class CoinCalculator {
 	ArrayList<Integer> coinTypes;
 	ArrayList<Integer> numOfCoins;
-	HashMap<Integer,ArrayList<Integer>> DPMap;
+	HashMap<Integer,ArrayList<Integer>> customerDPMap;
+	HashMap<Integer,ArrayList<Integer>> cashierDPMap;
 	
 	public CoinCalculator(ArrayList<Integer> coinTypes, ArrayList<Integer> numOfCoins) {
 		this.coinTypes = coinTypes;
 		this.numOfCoins = numOfCoins;
-		DPMap = new HashMap<>();
+		
+		customerDPMap = new HashMap<>();
 		ArrayList<Integer> defaultCoins = new ArrayList<>();
 		for (int i = 0; i < coinTypes.size(); i++) {
 			defaultCoins.add(0);
 		}
-		DPMap.put(0, defaultCoins);
+		customerDPMap.put(0, defaultCoins);
+		
+		cashierDPMap = new HashMap<>();
+		ArrayList<Integer> cashierCoins = new ArrayList<>();
+		for (int i = 0; i < coinTypes.size(); i++) {
+			cashierCoins.add(0);
+		}
+		cashierDPMap.put(0, cashierCoins);
 	}
 	
-	public ArrayList<Integer> find (int target) {
-		if (DPMap.containsKey(target)) {
-			return DPMap.get(target);
+	public ArrayList<Integer> findPay (int target) {
+		if (customerDPMap.containsKey(target)) {
+			return customerDPMap.get(target);
 		}
 		
 		ArrayList<Integer> result = null;
@@ -30,7 +39,7 @@ public class CoinCalculator {
 			boolean isLegal = true;
 			if (target - coinTypes.get(i) >= 0) {
 				ArrayList<Integer> currentList = new ArrayList<>();
-				ArrayList<Integer> beforeList = this.find(target - coinTypes.get(i));
+				ArrayList<Integer> beforeList = this.findPay(target - coinTypes.get(i));
 				if (beforeList == null) {
 					isLegal = false;
 					continue;
@@ -52,7 +61,36 @@ public class CoinCalculator {
 			}
 		}
 		result = this.selectMin(list);
-		DPMap.put(target, result);
+		customerDPMap.put(target, result);
+		return result;
+	}
+	
+	public ArrayList<Integer> findChanges (int target) {
+		if (cashierDPMap.containsKey(target)) {
+			return cashierDPMap.get(target);
+		}
+		
+		ArrayList<Integer> result = null;
+		ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+		for (int i = 0; i < coinTypes.size(); i++) {
+			if (target - coinTypes.get(i) >= 0) {
+				ArrayList<Integer> currentList = new ArrayList<>();
+				ArrayList<Integer> beforeList = this.findChanges(target - coinTypes.get(i));
+				if (beforeList == null) {
+					continue;
+				}
+				for (int j = 0; j < coinTypes.size(); j++) {
+					if (i == j) {
+						currentList.add(beforeList.get(j) + 1);
+					} else {
+						currentList.add(beforeList.get(j));
+					}
+				}
+				list.add(currentList);
+			}
+		}
+		result = this.selectMin(list);
+		cashierDPMap.put(target, result);
 		return result;
 	}
 	

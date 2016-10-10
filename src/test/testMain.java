@@ -16,13 +16,22 @@ public class testMain {
 		ArrayList<Integer> numOfCoins = new ArrayList<>();
 		numOfCoins.add(5);
 		numOfCoins.add(5);
-		numOfCoins.add(5);
+		numOfCoins.add(0);
 		numOfCoins.add(5);
 		numOfCoins.add(5);
 		
 		CoinCalculator CC = new CoinCalculator(coinTypes, numOfCoins);
-		
-		ArrayList<Integer> result = CC.find(1);
+
+		ArrayList<Integer> result = CC.findPay(17);
+		if (result == null) {
+			System.out.println("-1");
+		} else {
+			for (int i = 0; i < result.size(); i++) {
+				System.out.print(coinTypes.get(i));
+				System.out.println(": " + result.get(i));
+			}
+		}
+		result = CC.findChanges(17);
 		if (result == null) {
 			System.out.println("-1");
 		} else {
